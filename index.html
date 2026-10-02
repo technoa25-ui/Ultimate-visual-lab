@@ -1,0 +1,3069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#07111f">
+<title>Ultimate Science Lab</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    min-height:100%;
+    overflow-x:hidden;
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    background:#050914;
+    color:#eef6ff;
+}
+
+button,input,select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+body{
+    background:
+        radial-gradient(circle at 20% 10%,rgba(0,220,255,.10),transparent 30%),
+        radial-gradient(circle at 80% 20%,rgba(120,80,255,.10),transparent 30%),
+        #050914;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+#loading{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:#050914;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:opacity .7s,visibility .7s;
+}
+
+#loading.hide{
+    opacity:0;
+    visibility:hidden;
+}
+
+.loader{
+    width:min(500px,88vw);
+    text-align:center;
+}
+
+.loader-logo{
+    width:100px;
+    height:100px;
+    margin:auto;
+    border-radius:30px;
+    display:grid;
+    place-items:center;
+    font-size:50px;
+    background:linear-gradient(135deg,#00d9ff,#6d5cff);
+    box-shadow:0 0 60px rgba(0,210,255,.35);
+    animation:pulse 1.5s infinite;
+}
+
+.loader h1{
+    margin-top:25px;
+    font-size:clamp(28px,6vw,48px);
+}
+
+.loader p{
+    color:#9eb1c8;
+    margin:10px 0 25px;
+}
+
+.loader-bar{
+    height:8px;
+    background:#152033;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.loader-fill{
+    height:100%;
+    width:0;
+    background:linear-gradient(90deg,#00e5ff,#765cff);
+    transition:width .3s;
+}
+
+@keyframes pulse{
+    50%{transform:scale(1.06)}
+}
+
+/* =========================
+   APP
+========================= */
+
+.app{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:250px minmax(0,1fr);
+}
+
+.sidebar{
+    position:sticky;
+    top:0;
+    height:100vh;
+    padding:20px;
+    border-right:1px solid #172337;
+    background:rgba(6,12,23,.96);
+    z-index:20;
+    overflow-y:auto;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.brand-icon{
+    width:45px;
+    height:45px;
+    border-radius:13px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,#00ddff,#765bff);
+    font-size:23px;
+}
+
+.brand strong{
+    display:block;
+    font-size:16px;
+}
+
+.brand small{
+    color:#71849d;
+}
+
+.nav-title{
+    color:#52657e;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1.5px;
+    margin:20px 0 8px;
+}
+
+.nav button{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:#a8b8cc;
+    padding:12px;
+    margin:3px 0;
+    border-radius:12px;
+    text-align:left;
+    transition:.2s;
+}
+
+.nav button:hover,
+.nav button.active{
+    color:white;
+    background:#142238;
+}
+
+.nav button span{
+    margin-right:9px;
+}
+
+.sidebar-profile{
+    position:absolute;
+    left:16px;
+    right:16px;
+    bottom:16px;
+    padding:12px;
+    border:1px solid #1d2d44;
+    background:#0b1424;
+    border-radius:16px;
+}
+
+.sidebar-profile-inner{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.mini-avatar{
+    width:42px;
+    height:42px;
+    flex:none;
+    border-radius:12px;
+    background:linear-gradient(145deg,#173453,#0b1728);
+    display:grid;
+    place-items:center;
+    font-size:25px;
+}
+
+.sidebar-profile b{
+    font-size:13px;
+}
+
+.sidebar-profile small{
+    display:block;
+    color:#72859e;
+    margin-top:3px;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+    min-width:0;
+    padding:24px;
+}
+
+.topbar{
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:22px;
+}
+
+.page-title h1{
+    font-size:clamp(24px,4vw,38px);
+}
+
+.page-title p{
+    color:#71839b;
+    margin-top:5px;
+}
+
+.stats{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+}
+
+.stat{
+    min-width:100px;
+    padding:10px 14px;
+    border-radius:13px;
+    background:#0b1424;
+    border:1px solid #1a2a41;
+}
+
+.stat small{
+    color:#71849d;
+    display:block;
+    font-size:10px;
+}
+
+.stat b{
+    font-size:18px;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.hero{
+    min-height:230px;
+    padding:30px;
+    border-radius:24px;
+    border:1px solid #1d3048;
+    background:
+        radial-gradient(circle at 80% 20%,rgba(0,220,255,.14),transparent 25%),
+        linear-gradient(135deg,#0b1728,#09111f);
+    position:relative;
+    overflow:hidden;
+}
+
+.hero:after{
+    content:"";
+    position:absolute;
+    width:250px;
+    height:250px;
+    right:-70px;
+    bottom:-100px;
+    border:1px solid rgba(0,220,255,.2);
+    border-radius:50%;
+    box-shadow:0 0 0 35px rgba(0,220,255,.03),
+               0 0 0 70px rgba(0,220,255,.02);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:650px;
+}
+
+.badge{
+    display:inline-block;
+    padding:7px 10px;
+    border-radius:30px;
+    background:#102a3c;
+    color:#55eaff;
+    font-size:11px;
+    font-weight:bold;
+    margin-bottom:14px;
+}
+
+.hero h2{
+    font-size:clamp(28px,5vw,50px);
+    line-height:1;
+}
+
+.hero p{
+    color:#91a3ba;
+    margin:15px 0 22px;
+    line-height:1.6;
+}
+
+.primary{
+    border:0;
+    color:white;
+    font-weight:800;
+    padding:12px 18px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#00bfe9,#685cff);
+    box-shadow:0 10px 25px rgba(0,180,255,.15);
+}
+
+.subject-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:15px;
+    margin-top:18px;
+}
+
+.subject{
+    min-width:0;
+    padding:22px;
+    min-height:150px;
+    border-radius:20px;
+    border:1px solid #1b2d45;
+    background:#0a1322;
+    transition:.25s;
+    cursor:pointer;
+}
+
+.subject:hover{
+    transform:translateY(-4px);
+    border-color:#315176;
+}
+
+.subject-icon{
+    font-size:35px;
+    margin-bottom:15px;
+}
+
+.subject h3{
+    margin-bottom:7px;
+}
+
+.subject p{
+    color:#70839b;
+    font-size:13px;
+    line-height:1.5;
+}
+
+/* =========================
+   EXPERIMENTS
+========================= */
+
+.section{
+    margin-top:25px;
+}
+
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:13px;
+}
+
+.section-header p{
+    color:#6e829a;
+    font-size:13px;
+}
+
+.experiment-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(min(270px,100%),1fr));
+    gap:15px;
+}
+
+.experiment{
+    min-width:0;
+    border:1px solid #1a2b43;
+    background:#091321;
+    border-radius:18px;
+    padding:18px;
+}
+
+.experiment .icon{
+    font-size:30px;
+}
+
+.experiment h3{
+    margin:12px 0 7px;
+}
+
+.experiment p{
+    color:#71849c;
+    font-size:13px;
+    line-height:1.5;
+    min-height:40px;
+}
+
+.exp-meta{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    margin:13px 0;
+}
+
+.tag{
+    padding:5px 8px;
+    border-radius:7px;
+    font-size:10px;
+    background:#132036;
+    color:#9fb1c8;
+}
+
+.experiment button{
+    width:100%;
+    border:1px solid #263b57;
+    background:#0e1c2e;
+    color:white;
+    border-radius:10px;
+    padding:10px;
+}
+
+.experiment button:hover{
+    background:#142945;
+}
+
+/* =========================
+   LAB MODAL
+========================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:500;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    background:rgba(0,0,0,.72);
+    backdrop-filter:blur(10px);
+}
+
+.modal.open{
+    display:flex;
+}
+
+.lab-window{
+    width:min(1100px,96vw);
+    height:min(760px,92vh);
+    max-height:92vh;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    border:1px solid #29415e;
+    border-radius:22px;
+    overflow:hidden;
+    background:#07101d;
+    box-shadow:0 30px 100px rgba(0,0,0,.6);
+}
+
+.lab-header{
+    flex:none;
+    min-height:65px;
+    padding:12px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    border-bottom:1px solid #1a2a40;
+}
+
+.lab-header h2{
+    font-size:18px;
+}
+
+.close{
+    width:38px;
+    height:38px;
+    border:0;
+    border-radius:10px;
+    background:#162235;
+    color:white;
+    font-size:20px;
+}
+
+.lab-body{
+    flex:1;
+    min-height:0;
+    overflow:auto;
+    padding:18px;
+}
+
+.lab-layout{
+    width:100%;
+    min-height:100%;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 260px;
+    gap:16px;
+}
+
+.simulation{
+    min-width:0;
+    min-height:450px;
+    border-radius:17px;
+    border:1px solid #1c3049;
+    background:#040b14;
+    overflow:hidden;
+    position:relative;
+}
+
+.simulation canvas{
+    display:block;
+    width:100%;
+    height:100%;
+    max-width:100%;
+}
+
+.controls{
+    min-width:0;
+    padding:16px;
+    border-radius:17px;
+    border:1px solid #1c3049;
+    background:#0a1423;
+    align-self:start;
+}
+
+.controls h3{
+    margin-bottom:15px;
+}
+
+.control{
+    margin-bottom:15px;
+}
+
+.control label{
+    display:flex;
+    justify-content:space-between;
+    color:#9aacbf;
+    font-size:12px;
+    margin-bottom:7px;
+}
+
+.control input[type=range]{
+    width:100%;
+}
+
+.control select,
+.control input[type=number]{
+    width:100%;
+    padding:9px;
+    border:1px solid #263c58;
+    border-radius:9px;
+    background:#07101c;
+    color:white;
+}
+
+.control button{
+    width:100%;
+    padding:10px;
+    border:1px solid #29415d;
+    border-radius:9px;
+    color:white;
+    background:#112137;
+    margin-top:6px;
+}
+
+.info{
+    margin-top:12px;
+    padding:12px;
+    border-radius:12px;
+    background:#0c1a2c;
+    color:#8fa4bb;
+    font-size:12px;
+    line-height:1.55;
+}
+
+.result{
+    margin-top:12px;
+    padding:14px;
+    border-radius:13px;
+    background:#0b1c25;
+    border:1px solid #174152;
+    display:none;
+}
+
+.result.show{
+    display:block;
+}
+
+.result b{
+    color:#54e8ff;
+}
+
+/* =========================
+   CHARACTER PROFILE
+========================= */
+
+.profile{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 330px;
+    gap:18px;
+}
+
+.profile-card,
+.character-card{
+    min-width:0;
+    border:1px solid #1a2c44;
+    border-radius:20px;
+    background:#091321;
+    padding:22px;
+}
+
+.character-card{
+    min-height:500px;
+    display:flex;
+    flex-direction:column;
+}
+
+.character-stage{
+    flex:1;
+    min-height:300px;
+    border-radius:17px;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    background:
+        radial-gradient(circle at 50% 35%,rgba(0,220,255,.15),transparent 25%),
+        linear-gradient(#091a2a,#050b14);
+    border:1px solid #1d3049;
+}
+
+.character{
+    position:relative;
+    width:150px;
+    height:280px;
+    margin-bottom:20px;
+}
+
+.head{
+    position:absolute;
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    left:35px;
+    top:15px;
+    background:#d59a72;
+    border:4px solid #18283b;
+}
+
+.hair{
+    position:absolute;
+    left:35px;
+    top:8px;
+    width:80px;
+    height:35px;
+    border-radius:50px 50px 10px 10px;
+    background:#17202a;
+}
+
+.body{
+    position:absolute;
+    left:30px;
+    top:95px;
+    width:90px;
+    height:115px;
+    border-radius:22px;
+    background:#e9f5ff;
+    border:5px solid #17304a;
+}
+
+.body:after{
+    content:"🧪";
+    position:absolute;
+    left:27px;
+    top:30px;
+    font-size:32px;
+}
+
+.arm{
+    position:absolute;
+    width:24px;
+    height:95px;
+    top:105px;
+    background:#d59a72;
+    border-radius:20px;
+}
+
+.arm.left{
+    left:7px;
+    transform:rotate(18deg);
+}
+
+.arm.right{
+    right:7px;
+    transform:rotate(-18deg);
+}
+
+.leg{
+    position:absolute;
+    width:30px;
+    height:85px;
+    top:202px;
+    background:#263a52;
+    border-radius:0 0 14px 14px;
+}
+
+.leg.left{left:38px}
+.leg.right{right:38px}
+
+.profile-character-name{
+    text-align:center;
+    padding:12px;
+    font-weight:800;
+}
+
+.profile-actions{
+    display:flex;
+    gap:8px;
+}
+
+.profile-actions button{
+    flex:1;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid #263d58;
+    background:#102036;
+    color:white;
+}
+
+/* =========================
+   PROGRESS
+========================= */
+
+.progress-bar{
+    height:10px;
+    background:#142238;
+    border-radius:20px;
+    overflow:hidden;
+    margin:10px 0;
+}
+
+.progress-fill{
+    height:100%;
+    width:0;
+    background:linear-gradient(90deg,#00d9ff,#785cff);
+}
+
+.stat-big{
+    font-size:38px;
+    font-weight:900;
+}
+
+.achievement-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:12px;
+}
+
+.achievement{
+    border:1px solid #1c2e45;
+    border-radius:15px;
+    padding:16px;
+    background:#091321;
+}
+
+.achievement.locked{
+    opacity:.45;
+    filter:grayscale(1);
+}
+
+.achievement-icon{
+    font-size:28px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+    .app{
+        grid-template-columns:1fr;
+    }
+
+    .sidebar{
+        position:relative;
+        height:auto;
+        border-right:0;
+        border-bottom:1px solid #172337;
+    }
+
+    .sidebar-profile{
+        position:static;
+        margin-top:15px;
+    }
+
+    .nav{
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:5px;
+    }
+
+    .nav-title{
+        display:none;
+    }
+
+    .main{
+        padding:15px;
+    }
+
+    .lab-layout{
+        grid-template-columns:1fr;
+    }
+
+    .controls{
+        order:2;
+    }
+
+    .simulation{
+        min-height:430px;
+    }
+
+    .profile{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+    .topbar{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .stats{
+        width:100%;
+        justify-content:flex-start;
+    }
+
+    .stat{
+        flex:1;
+    }
+
+    .subject-grid{
+        grid-template-columns:1fr;
+    }
+
+    .hero{
+        padding:22px;
+    }
+
+    .nav{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .lab-window{
+        width:100%;
+        height:96vh;
+        max-height:96vh;
+        border-radius:15px;
+    }
+
+    .lab-body{
+        padding:10px;
+    }
+
+    .simulation{
+        min-height:350px;
+    }
+}
+
+@media(max-width:430px){
+    .simulation{
+        min-height:290px;
+    }
+
+    .lab-header h2{
+        font-size:15px;
+    }
+
+    .main{
+        padding:10px;
+    }
+}
+
+/* ============================================================
+   ENHANCED SCIENCE LAB UI
+   ============================================================ */
+:root{
+    --cyan:#35e8ff;
+    --violet:#8a6cff;
+    --panel:rgba(10,20,35,.92);
+    --line:rgba(111,157,207,.18);
+    --muted:#8295ad;
+}
+
+body{
+    background:
+        radial-gradient(circle at 12% 5%,rgba(0,229,255,.13),transparent 28%),
+        radial-gradient(circle at 88% 12%,rgba(130,91,255,.14),transparent 30%),
+        radial-gradient(circle at 50% 100%,rgba(0,110,255,.08),transparent 35%),
+        #040812;
+}
+
+.sidebar,.stat,.subject,.experiment,.profile-card,.character-card,.achievement{
+    box-shadow:0 12px 35px rgba(0,0,0,.16);
+}
+
+.sidebar{
+    background:linear-gradient(180deg,rgba(5,12,24,.98),rgba(7,15,28,.96));
+    backdrop-filter:blur(14px);
+}
+
+.brand-icon{
+    box-shadow:0 0 28px rgba(0,220,255,.22);
+}
+
+.stat{
+    min-width:105px;
+    background:linear-gradient(180deg,rgba(13,27,46,.96),rgba(8,18,31,.96));
+    transition:transform .2s,border-color .2s;
+}
+.stat:hover{transform:translateY(-2px);border-color:#315176}
+
+.hero{
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 20px 55px rgba(0,0,0,.18);
+}
+.hero:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(110deg,transparent 0 55%,rgba(53,232,255,.04) 65%,transparent 78%);
+    pointer-events:none;
+}
+.hero-content{position:relative}
+
+.subject,.experiment,.profile-card,.character-card,.achievement{
+    background:linear-gradient(145deg,rgba(11,23,39,.98),rgba(7,15,27,.98));
+    border-color:var(--line);
+}
+.subject:hover,.experiment:hover{
+    border-color:rgba(53,232,255,.42);
+    box-shadow:0 16px 40px rgba(0,0,0,.25),0 0 0 1px rgba(53,232,255,.05) inset;
+}
+
+.experiment button,.profile-actions button{
+    transition:.2s;
+}
+.experiment button:hover,.profile-actions button:hover{
+    transform:translateY(-1px);
+    border-color:rgba(53,232,255,.5);
+    box-shadow:0 8px 20px rgba(0,0,0,.2);
+}
+
+/* Better sidebar avatar */
+.sidebar-profile{
+    background:linear-gradient(145deg,#0e1b2d,#091321);
+    border-color:rgba(72,129,185,.25);
+}
+.mini-avatar{
+    width:44px;height:44px;
+    border:1px solid rgba(53,232,255,.22);
+    background:radial-gradient(circle at 50% 30%,#234768,#0a1728);
+    font-size:25px;
+    overflow:hidden;
+}
+
+/* Scientist profile */
+.profile{
+    align-items:stretch;
+}
+.profile-card,.character-card{
+    box-shadow:0 18px 50px rgba(0,0,0,.22);
+}
+.character-card{
+    min-height:540px;
+    padding:18px;
+}
+.character-card>h2{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    min-height:34px;
+}
+.character-stage{
+    flex:1 1 auto;
+    min-height:365px;
+    height:365px;
+    margin-top:14px;
+    padding:18px;
+    align-items:center;
+    justify-content:center;
+    background:
+        radial-gradient(circle at 50% 38%,rgba(53,232,255,.18),transparent 20%),
+        radial-gradient(circle at 50% 100%,rgba(117,91,255,.16),transparent 38%),
+        linear-gradient(180deg,#0a1c2e,#050b15);
+}
+.character-stage:before{
+    content:"";
+    position:absolute;
+    width:180px;height:36px;
+    bottom:18px;
+    border-radius:50%;
+    background:rgba(0,0,0,.38);
+    filter:blur(8px);
+}
+.character{
+    width:150px;
+    height:280px;
+    margin:0;
+    flex:0 0 auto;
+    transform:scale(.88);
+    transform-origin:center center;
+    z-index:2;
+    filter:drop-shadow(0 18px 18px rgba(0,0,0,.28));
+}
+.character .head{
+    box-shadow:inset -7px -7px 0 rgba(0,0,0,.08),0 5px 15px rgba(0,0,0,.18);
+}
+.character .body{
+    box-shadow:inset 0 -8px 0 rgba(20,45,70,.08),0 7px 18px rgba(0,0,0,.18);
+}
+.character .hair{
+    box-shadow:inset 0 -5px 0 rgba(0,0,0,.12);
+}
+.profile-character-name{
+    margin-top:8px;
+    padding:10px 8px 6px;
+    font-size:14px;
+}
+.profile-actions{margin-top:6px}
+
+/* XP card */
+.level-card{
+    margin-top:20px;
+    padding:18px;
+    border:1px solid rgba(74,126,180,.2);
+    border-radius:17px;
+    background:linear-gradient(145deg,#0c1b2e,#081321);
+}
+.level-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:12px;
+}
+.level-number{
+    font-size:44px;
+    line-height:1;
+    font-weight:950;
+    letter-spacing:-2px;
+    background:linear-gradient(135deg,#fff,#5deaff 60%,#9a83ff);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+}
+.level-next{
+    color:#8da0b7;
+    font-size:12px;
+    text-align:right;
+}
+.xp-track{
+    height:14px;
+    margin:15px 0 8px;
+    border-radius:99px;
+    padding:2px;
+    background:#101d30;
+    border:1px solid #20344e;
+    overflow:hidden;
+}
+.xp-fill{
+    height:100%;
+    width:0;
+    border-radius:99px;
+    background:linear-gradient(90deg,#19dcff,#6d6aff,#a36bff);
+    box-shadow:0 0 15px rgba(53,232,255,.35);
+    transition:width .45s cubic-bezier(.2,.8,.2,1);
+}
+.xp-caption{
+    display:flex;
+    justify-content:space-between;
+    color:#71869f;
+    font-size:11px;
+}
+
+/* Level-up celebration */
+.levelup-toast{
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%) scale(.8);
+    z-index:3000;
+    width:min(420px,calc(100vw - 30px));
+    padding:28px;
+    text-align:center;
+    border:1px solid rgba(82,234,255,.45);
+    border-radius:24px;
+    background:linear-gradient(145deg,rgba(10,25,43,.98),rgba(24,17,53,.98));
+    box-shadow:0 30px 100px rgba(0,0,0,.6),0 0 70px rgba(53,232,255,.12);
+    opacity:0;
+    pointer-events:none;
+    transition:.28s ease;
+}
+.levelup-toast.show{
+    opacity:1;
+    transform:translate(-50%,-50%) scale(1);
+}
+.levelup-toast .spark{
+    font-size:48px;
+    animation:levelPulse .7s infinite alternate;
+}
+.levelup-toast h2{
+    margin:8px 0 5px;
+    font-size:30px;
+}
+.levelup-toast p{color:#9bb0c7}
+.levelup-toast .new-level{
+    margin-top:14px;
+    font-size:54px;
+    font-weight:950;
+    color:#55ebff;
+}
+@keyframes levelPulse{
+    from{transform:scale(.92) rotate(-4deg)}
+    to{transform:scale(1.08) rotate(4deg)}
+}
+
+/* Keep character + emoji safely inside their containers */
+.character-stage,.character-card,.sidebar-profile,.mini-avatar{contain:layout paint;}
+.sidebar-profile-inner{min-width:0}
+.sidebar-profile-inner>div:last-child{min-width:0}
+.sidebar-profile b,.sidebar-profile small{
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+@media(max-width:900px){
+    .character-card{min-height:520px}
+    .character-stage{height:350px;min-height:350px}
+}
+@media(max-width:650px){
+    .character-card{min-height:500px}
+    .character-stage{height:330px;min-height:330px;padding:10px}
+    .character{transform:scale(.78)}
+}
+@media(max-width:430px){
+    .character-stage{height:300px;min-height:300px}
+    .character{transform:scale(.68)}
+}
+
+
+.character .glasses{
+    position:absolute;
+    z-index:5;
+    left:43px;
+    top:39px;
+    width:64px;
+    height:23px;
+    border:4px solid #17283b;
+    border-radius:8px;
+}
+.character .glasses:before,
+.character .glasses:after{
+    content:"";
+    position:absolute;
+    top:3px;
+    width:20px;height:12px;
+    border:2px solid #2a435d;
+    border-radius:5px;
+    background:rgba(120,230,255,.12);
+}
+.character .glasses:before{left:2px}
+.character .glasses:after{right:2px}
+.character .coat-badge{
+    position:absolute;
+    z-index:8;
+    left:68px;
+    top:132px;
+    width:20px;height:20px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:#122c45;
+    border:1px solid #55eaff;
+    color:#55eaff;
+    font-size:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="loading">
+    <div class="loader">
+        <div class="loader-logo">🧪</div>
+        <h1>ULTIMATE SCIENCE LAB</h1>
+        <p id="loadingText">Initializing laboratory...</p>
+        <div class="loader-bar">
+            <div class="loader-fill" id="loaderFill"></div>
+        </div>
+    </div>
+</div>
+
+<div class="app">
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <div class="brand-icon">⚗️</div>
+        <div>
+            <strong>Science Lab</strong>
+            <small>Virtual Laboratory</small>
+        </div>
+    </div>
+
+    <div class="nav">
+        <div class="nav-title">LAB</div>
+
+        <button class="active" onclick="showPage('home',this)">
+            <span>🏠</span> Dashboard
+        </button>
+
+        <button onclick="showPage('chemistry',this)">
+            <span>🧪</span> Chemistry
+        </button>
+
+        <button onclick="showPage('physics',this)">
+            <span>⚡</span> Physics
+        </button>
+
+        <button onclick="showPage('biology',this)">
+            <span>🧬</span> Biology
+        </button>
+
+        <div class="nav-title">PLAYER</div>
+
+        <button onclick="showPage('profile',this)">
+            <span>🧑‍🔬</span> Scientist
+        </button>
+
+        <button onclick="showPage('achievements',this)">
+            <span>🏆</span> Achievements
+        </button>
+    </div>
+
+    <!-- IMPORTANT:
+         Character is deliberately inside the profile card.
+         It is NOT fixed to the viewport and therefore cannot
+         drift away from the profile. -->
+    <div class="sidebar-profile">
+        <div class="sidebar-profile-inner">
+            <div class="mini-avatar">🧑‍🔬</div>
+            <div>
+                <b>Young Scientist</b>
+                <small>Level <span id="sideLevel">1</span></small>
+            </div>
+        </div>
+    </div>
+
+</aside>
+
+<main class="main">
+
+<div class="topbar">
+    <div class="page-title">
+        <h1 id="pageTitle">Ultimate Science Lab</h1>
+        <p id="pageSubtitle">Explore. Experiment. Understand.</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <small>LEVEL</small>
+            <b id="level">1</b>
+        </div>
+
+        <div class="stat">
+            <small>XP</small>
+            <b id="xp">0</b>
+        </div>
+
+        <div class="stat">
+            <small>COINS</small>
+            <b id="coins">0</b>
+        </div>
+
+        <div class="stat">
+            <small>EXPERIMENTS</small>
+            <b id="completed">0</b>
+        </div>
+    </div>
+</div>
+
+<!-- HOME -->
+
+<section id="home" class="page">
+
+<div class="hero">
+    <div class="hero-content">
+        <span class="badge">🔬 INTERACTIVE EDUCATION</span>
+        <h2>Welcome to the<br>Virtual Laboratory.</h2>
+        <p>
+            Run interactive Chemistry, Physics and Biology experiments
+            and discover the science behind what you observe.
+        </p>
+        <button class="primary" onclick="showPage('chemistry')">
+            Enter Laboratory →
+        </button>
+    </div>
+</div>
+
+<div class="subject-grid">
+
+    <div class="subject" onclick="showPage('chemistry')">
+        <div class="subject-icon">🧪</div>
+        <h3>Chemistry</h3>
+        <p>Reactions, pH, particles, gases, atoms and molecular science.</p>
+    </div>
+
+    <div class="subject" onclick="showPage('physics')">
+        <div class="subject-icon">⚡</div>
+        <h3>Physics</h3>
+        <p>Motion, forces, circuits, waves, light, reflection and energy.</p>
+    </div>
+
+    <div class="subject" onclick="showPage('biology')">
+        <div class="subject-icon">🧬</div>
+        <h3>Biology</h3>
+        <p>Cells, DNA, genetics, ecosystems and human biology.</p>
+    </div>
+
+</div>
+
+<div class="section">
+    <div class="section-header">
+        <div>
+            <h2>Featured Experiments</h2>
+            <p>Interactive simulations — not just text demonstrations.</p>
+        </div>
+    </div>
+
+    <div class="experiment-grid">
+
+        <div class="experiment">
+            <div class="icon">🌈</div>
+            <h3>Reflection of Light</h3>
+            <p>Change the incident angle and watch the reflected ray obey the law of reflection.</p>
+            <div class="exp-meta">
+                <span class="tag">PHYSICS</span>
+                <span class="tag">+50 XP</span>
+            </div>
+            <button onclick="openLab('reflection')">Launch Experiment</button>
+        </div>
+
+        <div class="experiment">
+            <div class="icon">🧪</div>
+            <h3>Reaction Rate</h3>
+            <p>Investigate how temperature changes the speed of a reaction.</p>
+            <div class="exp-meta">
+                <span class="tag">CHEMISTRY</span>
+                <span class="tag">+50 XP</span>
+            </div>
+            <button onclick="openLab('reaction')">Launch Experiment</button>
+        </div>
+
+        <div class="experiment">
+            <div class="icon">🚀</div>
+            <h3>Projectile Motion</h3>
+            <p>Adjust launch angle and velocity and predict where the projectile lands.</p>
+            <div class="exp-meta">
+                <span class="tag">PHYSICS</span>
+                <span class="tag">+60 XP</span>
+            </div>
+            <button onclick="openLab('projectile')">Launch Experiment</button>
+        </div>
+
+    </div>
+</div>
+
+</section>
+
+<!-- CHEMISTRY -->
+
+<section id="chemistry" class="page" style="display:none">
+
+<div class="section-header">
+    <div>
+        <h2>🧪 Chemistry Laboratory</h2>
+        <p>Explore matter, reactions and molecular behavior.</p>
+    </div>
+</div>
+
+<div class="experiment-grid">
+
+<div class="experiment">
+    <div class="icon">🧪</div>
+    <h3>pH Simulator</h3>
+    <p>Explore acids, bases and the pH scale.</p>
+    <div class="exp-meta">
+        <span class="tag">CHEMISTRY</span>
+        <span class="tag">+40 XP</span>
+    </div>
+    <button onclick="openLab('ph')">Open Lab</button>
+</div>
+
+<div class="experiment">
+    <div class="icon">🔥</div>
+    <h3>Reaction Rate</h3>
+    <p>Change temperature and observe reaction speed.</p>
+    <div class="exp-meta">
+        <span class="tag">CHEMISTRY</span>
+        <span class="tag">+50 XP</span>
+    </div>
+    <button onclick="openLab('reaction')">Open Lab</button>
+</div>
+
+<div class="experiment">
+    <div class="icon">⚛️</div>
+    <h3>Atomic Structure</h3>
+    <p>Explore protons, neutrons and electrons.</p>
+    <div class="exp-meta">
+        <span class="tag">CHEMISTRY</span>
+        <span class="tag">+40 XP</span>
+    </div>
+    <button onclick="openLab('atom')">Open Lab</button>
+</div>
+
+</div>
+
+</section>
+
+<!-- PHYSICS -->
+
+<section id="physics" class="page" style="display:none">
+
+<div class="section-header">
+    <div>
+        <h2>⚡ Physics Laboratory</h2>
+        <p>Manipulate real physics variables and observe the results.</p>
+    </div>
+</div>
+
+<div class="experiment-grid">
+
+<div class="experiment">
+    <div class="icon">🌈</div>
+    <h3>Reflection of Light</h3>
+    <p>Move the angle and see the reflected ray update instantly.</p>
+    <div class="exp-meta">
+        <span class="tag">OPTICS</span>
+        <span class="tag">+50 XP</span>
+    </div>
+    <button onclick="openLab('reflection')">Open Lab</button>
+</div>
+
+<div class="experiment">
+    <div class="icon">🚀</div>
+    <h3>Projectile Motion</h3>
+    <p>Control launch velocity, angle and gravity.</p>
+    <div class="exp-meta">
+        <span class="tag">MECHANICS</span>
+        <span class="tag">+60 XP</span>
+    </div>
+    <button onclick="openLab('projectile')">Open Lab</button>
+</div>
+
+<div class="experiment">
+    <div class="icon">🔌</div>
+    <h3>Ohm's Law</h3>
+    <p>Explore the relationship between voltage, current and resistance.</p>
+    <div class="exp-meta">
+        <span class="tag">ELECTRICITY</span>
+        <span class="tag">+50 XP</span>
+    </div>
+    <button onclick="openLab('ohm')">Open Lab</button>
+</div>
+
+<div class="experiment">
+    <div class="icon">〰️</div>
+    <h3>Wave Generator</h3>
+    <p>Change frequency and amplitude of a live wave.</p>
+    <div class="exp-meta">
+        <span class="tag">WAVES</span>
+        <span class="tag">+40 XP</span>
+    </div>
+    <button onclick="openLab('wave')">Open Lab</button>
+</div>
+
+</div>
+
+</section>
+
+<!-- BIOLOGY -->
+
+<section id="biology" class="page" style="display:none">
+
+<div class="section-header">
+    <div>
+        <h2>🧬 Biology Laboratory</h2>
+        <p>Explore cells, DNA and living systems.</p>
+    </div>
+</div>
+
+<div class="experiment-grid">
+
+<div class="experiment">
+    <div class="icon">🔬</div>
+    <h3>Cell Explorer</h3>
+    <p>Click different organelles to learn what they do.</p>
+    <div class="exp-meta">
+        <span class="tag">CELLS</span>
+        <span class="tag">+40 XP</span>
+    </div>
+    <button onclick="openLab('cell')">Open Lab</button>
+</div>
+
+<div class="experiment">
+    <div class="icon">🧬</div>
+    <h3>DNA Base Pairing</h3>
+    <p>Build complementary DNA strands.</p>
+    <div class="exp-meta">
+        <span class="tag">GENETICS</span>
+        <span class="tag">+50 XP</span>
+    </div>
+    <button onclick="openLab('dna')">Open Lab</button>
+</div>
+
+<div class="experiment">
+    <div class="icon">🌱</div>
+    <h3>Photosynthesis</h3>
+    <p>Explore how light affects photosynthesis.</p>
+    <div class="exp-meta">
+        <span class="tag">PLANTS</span>
+        <span class="tag">+45 XP</span>
+    </div>
+    <button onclick="openLab('photo')">Open Lab</button>
+</div>
+
+</div>
+
+</section>
+
+<!-- PROFILE -->
+
+<section id="profile" class="page" style="display:none">
+
+<div class="profile">
+
+<div class="profile-card">
+
+    <h2>🧑‍🔬 Scientist Profile</h2>
+
+    <div class="level-card">
+        <div class="level-row">
+            <div>
+                <div class="level-number" id="profileLevel">1</div>
+                <div style="color:#8da0b7;margin-top:4px">Scientist Level</div>
+            </div>
+            <div class="level-next">
+                NEXT LEVEL<br>
+                <strong id="nextLevelXP">100 XP</strong>
+            </div>
+        </div>
+        <div class="xp-track">
+            <div class="xp-fill" id="xpBar"></div>
+        </div>
+        <div class="xp-caption">
+            <span id="xpText">0 / 100 XP</span>
+            <span id="xpPercent">0%</span>
+        </div>
+    </div>
+
+    <div style="margin-top:30px">
+
+        <h3>Laboratory Progress</h3>
+
+        <div style="margin-top:15px">
+            <p style="color:#8498ae">Experiments completed</p>
+            <strong id="profileCompleted">0</strong>
+        </div>
+
+        <div style="margin-top:15px">
+            <p style="color:#8498ae">Coins</p>
+            <strong id="profileCoins">0</strong>
+        </div>
+
+    </div>
+
+    <div style="margin-top:30px">
+        <h3>XP Protection</h3>
+
+        <div class="info">
+            XP is awarded only when an experiment is completed.
+            The 30-minute protection system prevents repeated automatic
+            farming from generating unlimited XP.
+        </div>
+
+        <p id="cooldownText" style="color:#65e7ff;margin-top:12px"></p>
+    </div>
+
+</div>
+
+<div class="character-card">
+
+    <h2>Character Viewer</h2>
+
+    <!-- CHARACTER IS CENTERED INSIDE THIS STAGE.
+         No fixed bottom-left positioning. -->
+    <div class="character-stage">
+
+        <div class="character" aria-label="Young Scientist character">
+            <div class="hair"></div>
+            <div class="head"></div>
+            <div class="glasses"></div>
+            <div class="coat-badge">✦</div>
+
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+
+            <div class="body"></div>
+
+            <div class="leg left"></div>
+            <div class="leg right"></div>
+        </div>
+
+    </div>
+
+    <div class="profile-character-name">
+        🧑‍🔬 Young Scientist
+    </div>
+
+    <div class="profile-actions">
+        <button onclick="alert('More scientist styles unlock as you level up!')">
+            Customize
+        </button>
+
+        <button onclick="resetData()">
+            Reset
+        </button>
+    </div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ACHIEVEMENTS -->
+
+<section id="achievements" class="page" style="display:none">
+
+<div class="section-header">
+    <div>
+        <h2>🏆 Achievements</h2>
+        <p>Master the laboratory.</p>
+    </div>
+</div>
+
+<div class="achievement-grid">
+
+<div class="achievement" id="a1">
+    <div class="achievement-icon">🔬</div>
+    <h3>First Experiment</h3>
+    <p>Complete your first experiment.</p>
+</div>
+
+<div class="achievement locked" id="a5">
+    <div class="achievement-icon">🔥</div>
+    <h3>Scientist ×5</h3>
+    <p>Complete five experiments.</p>
+</div>
+
+<div class="achievement locked" id="a10">
+    <div class="achievement-icon">⚡</div>
+    <h3>Master Scientist</h3>
+    <p>Complete ten experiments.</p>
+</div>
+
+<div class="achievement locked" id="a25">
+    <div class="achievement-icon">👑</div>
+    <h3>Ultimate Scientist</h3>
+    <p>Complete twenty-five experiments.</p>
+</div>
+
+</div>
+
+</section>
+
+</main>
+</div>
+
+<!-- LAB MODAL -->
+
+<div class="modal" id="labModal">
+
+<div class="lab-window">
+
+    <div class="lab-header">
+        <h2 id="labTitle">Experiment</h2>
+        <button class="close" onclick="closeLab()">×</button>
+    </div>
+
+    <div class="lab-body">
+
+        <div class="lab-layout">
+
+            <div class="simulation" id="simulation"></div>
+
+            <div class="controls" id="controls"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<div class="levelup-toast" id="levelupToast" aria-live="polite">
+    <div class="spark">🧪✨</div>
+    <h2>LEVEL UP!</h2>
+    <p>Your scientist rank has increased.</p>
+    <div class="new-level" id="newLevelNumber">2</div>
+</div>
+
+<script>
+/* ============================================================
+   SAVE DATA
+============================================================ */
+
+const DEFAULT_DATA={
+    xp:0,
+    level:1,
+    coins:0,
+    completed:0,
+    lastXP:0
+};
+
+let data={
+    ...DEFAULT_DATA,
+    ...(JSON.parse(localStorage.getItem("ultimateScienceLab"))||{})
+};
+
+function getLevelFromXP(xp){
+    // Every level is exactly 100 XP. XP is cumulative and never resets.
+    return Math.floor(Math.max(0,Number(xp)||0)/100)+1;
+}
+
+function getLevelProgress(xp){
+    const safe=Math.max(0,Number(xp)||0);
+    const current=safe%100;
+    return {current,needed:100,percent:(current/100)*100};
+}
+
+function save(){
+    localStorage.setItem("ultimateScienceLab",JSON.stringify(data));
+    updateUI();
+}
+
+function updateUI(){
+    const oldLevel=Number(data.level)||1;
+    data.level=getLevelFromXP(data.xp);
+
+    document.getElementById("level").textContent=data.level;
+    document.getElementById("xp").textContent=data.xp;
+    document.getElementById("coins").textContent=data.coins;
+    document.getElementById("completed").textContent=data.completed;
+    document.getElementById("sideLevel").textContent=data.level;
+
+    document.getElementById("profileLevel").textContent=data.level;
+    document.getElementById("profileCompleted").textContent=data.completed;
+    document.getElementById("profileCoins").textContent=data.coins;
+
+    const progress=getLevelProgress(data.xp);
+    document.getElementById("xpBar").style.width=progress.percent+"%";
+    document.getElementById("xpText").textContent=
+        progress.current+" / "+progress.needed+" XP";
+    document.getElementById("xpPercent").textContent=
+        Math.round(progress.percent)+"%";
+    document.getElementById("nextLevelXP").textContent=
+        (data.level*100)+" XP";
+
+    const now=Date.now();
+    const cooldown=30*60*1000;
+    const cooldownEl=document.getElementById("cooldownText");
+
+    if(data.lastXP && now-data.lastXP<cooldown){
+        const remaining=cooldown-(now-data.lastXP);
+        const mins=Math.floor(remaining/60000);
+        const secs=Math.floor((remaining%60000)/1000);
+        cooldownEl.textContent=
+            "XP protection active — "+mins+"m "+String(secs).padStart(2,"0")+"s remaining.";
+    }else{
+        cooldownEl.textContent="XP reward available.";
+    }
+
+    updateAchievements();
+
+    if(data.level>oldLevel && oldLevel>0){
+        showLevelUp(data.level);
+    }
+}
+
+let lastShownLevel=0;
+
+function showLevelUp(level){
+    if(lastShownLevel===level)return;
+    lastShownLevel=level;
+    const toast=document.getElementById("levelupToast");
+    const number=document.getElementById("newLevelNumber");
+    if(!toast)return;
+    number.textContent=level;
+    toast.classList.add("show");
+    clearTimeout(window.levelToastTimer);
+    window.levelToastTimer=setTimeout(()=>{
+        toast.classList.remove("show");
+    },2600);
+}
+
+/* ============================================================
+   XP SYSTEM
+============================================================ */
+
+function completeExperiment(baseXP=40){
+    const now=Date.now();
+    const cooldown=30*60*1000;
+    const oldLevel=getLevelFromXP(data.xp);
+
+    // Completing an experiment always counts and awards coins.
+    data.completed++;
+    const coinReward=Math.max(1,Math.round(baseXP*.5));
+    data.coins+=coinReward;
+
+    let awardedXP=0;
+
+    // Only one XP reward can be earned during each 30-minute window.
+    if(!data.lastXP || now-data.lastXP>=cooldown){
+        data.xp+=Number(baseXP)||40;
+        data.lastXP=now;
+        awardedXP=Number(baseXP)||40;
+    }
+
+    const newLevel=getLevelFromXP(data.xp);
+    data.level=newLevel;
+
+    localStorage.setItem("ultimateScienceLab",JSON.stringify(data));
+    updateUI();
+
+    if(newLevel>oldLevel){
+        // updateUI already displays the level-up celebration.
+        return;
+    }
+
+    if(awardedXP>0){
+        alert(
+            "🧪 Experiment completed!\n\n"+
+            "XP earned: +"+awardedXP+
+            "\nCoins earned: +"+coinReward
+        );
+    }else{
+        const remaining=cooldown-(now-data.lastXP);
+        const mins=Math.floor(remaining/60000);
+        const secs=Math.floor((remaining%60000)/1000);
+        alert(
+            "🧪 Experiment completed!\n\n"+
+            "Coins earned: +"+coinReward+
+            "\n\nXP protection is active.\n"+
+            "Next XP reward in "+mins+"m "+String(secs).padStart(2,"0")+"s."
+        );
+    }
+}
+
+/* ============================================================
+   PAGE NAVIGATION
+============================================================ */
+
+function showPage(page,button){
+
+    document.querySelectorAll(".page").forEach(p=>{
+        p.style.display="none";
+    });
+
+    document.getElementById(page).style.display="block";
+
+    if(button){
+        document.querySelectorAll(".nav button").forEach(b=>{
+            b.classList.remove("active");
+        });
+        button.classList.add("active");
+    }
+
+    const titles={
+        home:["Ultimate Science Lab","Explore. Experiment. Understand."],
+        chemistry:["Chemistry Laboratory","Matter, reactions and molecular science."],
+        physics:["Physics Laboratory","Motion, energy, electricity, waves and light."],
+        biology:["Biology Laboratory","Cells, DNA, organisms and ecosystems."],
+        profile:["Scientist Profile","Your laboratory progress and character."],
+        achievements:["Achievements","Become a master scientist."]
+    };
+
+    document.getElementById("pageTitle").textContent=titles[page][0];
+    document.getElementById("pageSubtitle").textContent=titles[page][1];
+
+    window.scrollTo(0,0);
+}
+
+/* ============================================================
+   LAB ENGINE
+============================================================ */
+
+let animationId=null;
+let currentType=null;
+
+function openLab(type){
+
+    currentType=type;
+
+    document.getElementById("labModal").classList.add("open");
+
+    const simulation=document.getElementById("simulation");
+
+    simulation.innerHTML="";
+    document.getElementById("controls").innerHTML="";
+
+    if(animationId){
+        cancelAnimationFrame(animationId);
+        animationId=null;
+    }
+
+    const labs={
+        reflection:reflectionLab,
+        projectile:projectileLab,
+        reaction:reactionLab,
+        ph:phLab,
+        atom:atomLab,
+        ohm:ohmLab,
+        wave:waveLab,
+        cell:cellLab,
+        dna:dnaLab,
+        photo:photoLab
+    };
+
+    labs[type]();
+}
+
+function closeLab(){
+
+    document.getElementById("labModal").classList.remove("open");
+
+    if(animationId){
+        cancelAnimationFrame(animationId);
+        animationId=null;
+    }
+}
+
+/* ============================================================
+   CANVAS CREATOR
+============================================================ */
+
+function makeCanvas(){
+
+    const container=document.getElementById("simulation");
+
+    const canvas=document.createElement("canvas");
+
+    container.appendChild(canvas);
+
+    function resize(){
+
+        const rect=container.getBoundingClientRect();
+
+        /*
+           IMPORTANT FIX:
+           Canvas uses its real CSS container size.
+           It never creates a gigantic fixed 1920x1080
+           experiment that gets squeezed or zoomed.
+        */
+
+        const dpr=Math.min(window.devicePixelRatio||1,2);
+
+        canvas.width=Math.max(1,Math.floor(rect.width*dpr));
+        canvas.height=Math.max(1,Math.floor(rect.height*dpr));
+
+        canvas.style.width="100%";
+        canvas.style.height="100%";
+
+        const ctx=canvas.getContext("2d");
+
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+
+        canvas._width=rect.width;
+        canvas._height=rect.height;
+        canvas._ctx=ctx;
+    }
+
+    resize();
+
+    window.addEventListener("resize",resize);
+
+    return canvas;
+}
+
+/* ============================================================
+   REFLECTION
+============================================================ */
+
+function reflectionLab(){
+
+    document.getElementById("labTitle").textContent="🌈 Reflection of Light";
+
+    const canvas=makeCanvas();
+
+    document.getElementById("controls").innerHTML=`
+        <h3>Light Controls</h3>
+
+        <div class="control">
+            <label>
+                Incident angle
+                <span id="angleValue">35°</span>
+            </label>
+            <input id="angle" type="range" min="5" max="80" value="35">
+        </div>
+
+        <button onclick="completeExperiment(50)">Complete Experiment</button>
+
+        <div class="info">
+            <b>Law of reflection</b><br>
+            The angle of incidence equals the angle of reflection.
+            Change the angle and observe both rays.
+        </div>
+    `;
+
+    const angle=document.getElementById("angle");
+
+    function draw(){
+
+        const ctx=canvas._ctx;
+        const w=canvas._width;
+        const h=canvas._height;
+
+        ctx.clearRect(0,0,w,h);
+
+        ctx.fillStyle="#030812";
+        ctx.fillRect(0,0,w,h);
+
+        const cx=w/2;
+        const cy=h/2;
+
+        ctx.strokeStyle="#26384f";
+        ctx.lineWidth=2;
+
+        ctx.beginPath();
+        ctx.moveTo(30,cy);
+        ctx.lineTo(w-30,cy);
+        ctx.stroke();
+
+        ctx.strokeStyle="#c5d2df";
+        ctx.lineWidth=4;
+
+        ctx.beginPath();
+        ctx.moveTo(cx-160,cy);
+        ctx.lineTo(cx+160,cy);
+        ctx.stroke();
+
+        const a=Number(angle.value)*Math.PI/180;
+        const len=Math.min(w,h)*.35;
+
+        ctx.strokeStyle="#43e7ff";
+        ctx.lineWidth=4;
+
+        ctx.beginPath();
+        ctx.moveTo(
+            cx-len*Math.sin(a),
+            cy-len*Math.cos(a)
+        );
+        ctx.lineTo(cx,cy);
+        ctx.stroke();
+
+        ctx.strokeStyle="#ff6df0";
+
+        ctx.beginPath();
+        ctx.moveTo(cx,cy);
+        ctx.lineTo(
+            cx+len*Math.sin(a),
+            cy-len*Math.cos(a)
+        );
+        ctx.stroke();
+
+        ctx.strokeStyle="#5c7592";
+        ctx.lineWidth=1;
+
+        ctx.beginPath();
+        ctx.moveTo(cx,cy-150);
+        ctx.lineTo(cx,cy+150);
+        ctx.stroke();
+
+        ctx.fillStyle="white";
+        ctx.font="bold 15px Arial";
+
+        ctx.fillText(
+            "INCIDENT",
+            Math.max(10,cx-len*.75),
+            Math.max(20,cy-len*.65)
+        );
+
+        ctx.fillText(
+            "REFLECTED",
+            Math.min(w-100,cx+len*.4),
+            Math.max(20,cy-len*.65)
+        );
+
+        document.getElementById("angleValue").textContent=
+            angle.value+"°";
+    }
+
+    angle.addEventListener("input",draw);
+
+    new ResizeObserver(draw).observe(document.getElementById("simulation"));
+
+    draw();
+}
+
+/* ============================================================
+   PROJECTILE
+============================================================ */
+
+function projectileLab(){
+
+    document.getElementById("labTitle").textContent="🚀 Projectile Motion";
+
+    const canvas=makeCanvas();
+
+    document.getElementById("controls").innerHTML=`
+        <h3>Projectile Controls</h3>
+
+        <div class="control">
+            <label>Velocity <span id="velocityValue">30 m/s</span></label>
+            <input id="velocity" type="range" min="10" max="60" value="30">
+        </div>
+
+        <div class="control">
+            <label>Angle <span id="launchValue">45°</span></label>
+            <input id="launch" type="range" min="10" max="80" value="45">
+        </div>
+
+        <div class="control">
+            <label>Gravity <span id="gravityValue">9.8</span></label>
+            <input id="gravity" type="range" min="1" max="20" step=".1" value="9.8">
+        </div>
+
+        <button onclick="completeExperiment(60)">Complete Experiment</button>
+
+        <div class="info">
+            Projectile motion combines horizontal motion with
+            vertical acceleration due to gravity.
+        </div>
+    `;
+
+    const velocity=document.getElementById("velocity");
+    const launch=document.getElementById("launch");
+    const gravity=document.getElementById("gravity");
+
+    function draw(){
+
+        const ctx=canvas._ctx;
+        const w=canvas._width;
+        const h=canvas._height;
+
+        ctx.clearRect(0,0,w,h);
+
+        ctx.fillStyle="#030812";
+        ctx.fillRect(0,0,w,h);
+
+        const v=+velocity.value;
+        const a=+launch.value*Math.PI/180;
+        const g=+gravity.value;
+
+        document.getElementById("velocityValue").textContent=v+" m/s";
+        document.getElementById("launchValue").textContent=launch.value+"°";
+        document.getElementById("gravityValue").textContent=g.toFixed(1);
+
+        const vx=v*Math.cos(a);
+        const vy=v*Math.sin(a);
+
+        const total=(2*vy)/g;
+
+        const scale=Math.min(w*.8/(vx*total),h*.55/(vy*total/2));
+
+        ctx.strokeStyle="#23374f";
+        ctx.lineWidth=2;
+
+        ctx.beginPath();
+        ctx.moveTo(30,h-55);
+        ctx.lineTo(w-25,h-55);
+        ctx.stroke();
+
+        ctx.strokeStyle="#4ce7ff";
+        ctx.lineWidth=3;
+
+        ctx.beginPath();
+
+        for(let i=0;i<=80;i++){
+
+            const t=total*i/80;
+
+            const x=30+vx*t*scale;
+            const y=h-55-(vy*t-.5*g*t*t)*scale;
+
+            if(i===0)ctx.moveTo(x,y);
+            else ctx.lineTo(x,y);
+        }
+
+        ctx.stroke();
+
+        const endX=30+vx*total*scale;
+
+        ctx.fillStyle="#ff637e";
+        ctx.beginPath();
+        ctx.arc(endX,h-55,8,0,Math.PI*2);
+        ctx.fill();
+
+        ctx.fillStyle="white";
+        ctx.font="14px Arial";
+        ctx.fillText("Range ≈ "+(vx*total).toFixed(1)+" m",20,25);
+    }
+
+    [velocity,launch,gravity].forEach(x=>x.addEventListener("input",draw));
+
+    new ResizeObserver(draw).observe(document.getElementById("simulation"));
+
+    draw();
+}
+
+/* ============================================================
+   REACTION RATE
+============================================================ */
+
+function reactionLab(){
+
+    document.getElementById("labTitle").textContent="🔥 Reaction Rate";
+
+    const canvas=makeCanvas();
+
+    document.getElementById("controls").innerHTML=`
+        <h3>Reaction Conditions</h3>
+
+        <div class="control">
+            <label>Temperature <span id="tempValue">25°C</span></label>
+            <input id="temp" type="range" min="0" max="100" value="25">
+        </div>
+
+        <div class="control">
+            <label>Concentration <span id="concValue">50%</span></label>
+            <input id="conc" type="range" min="10" max="100" value="50">
+        </div>
+
+        <button onclick="completeExperiment(50)">Complete Experiment</button>
+
+        <div class="info">
+            Increasing temperature generally increases particle
+            collision frequency and the proportion of particles
+            with enough energy to react.
+        </div>
+    `;
+
+    const temp=document.getElementById("temp");
+    const conc=document.getElementById("conc");
+
+    function draw(){
+
+        const ctx=canvas._ctx;
+        const w=canvas._width;
+        const h=canvas._height;
+
+        ctx.clearRect(0,0,w,h);
+
+        ctx.fillStyle="#030812";
+        ctx.fillRect(0,0,w,h);
+
+        const T=+temp.value;
+        const C=+conc.value;
+
+        document.getElementById("tempValue").textContent=T+"°C";
+        document.getElementById("concValue").textContent=C+"%";
+
+        const rate=Math.min(1,(T/100)*.65+(C/100)*.35);
+
+        const particles=Math.round(20+C*.4);
+
+        for(let i=0;i<particles;i++){
+
+            const x=40+(i*83)%Math.max(50,w-80);
+            const y=70+(i*47)%Math.max(80,h-130);
+
+            const r=3+rate*4;
+
+            ctx.fillStyle=i%2?"#49e6ff":"#ff6adf";
+
+            ctx.beginPath();
+            ctx.arc(x,y,r,0,Math.PI*2);
+            ctx.fill();
+        }
+
+        ctx.fillStyle="white";
+        ctx.font="bold 18px Arial";
+        ctx.fillText("Relative reaction rate: "+Math.round(rate*100)+"%",20,30);
+    }
+
+    [temp,conc].forEach(x=>x.addEventListener("input",draw));
+
+    new ResizeObserver(draw).observe(document.getElementById("simulation"));
+
+    draw();
+}
+
+/* ============================================================
+   PH
+============================================================ */
+
+function phLab(){
+
+    document.getElementById("labTitle").textContent="🧪 pH Simulator";
+
+    const canvas=makeCanvas();
+
+    document.getElementById("controls").innerHTML=`
+        <h3>Solution</h3>
+
+        <div class="control">
+            <label>pH <span id="phValue">7.0</span></label>
+            <input id="phSlider" type="range" min="0" max="14" step=".1" value="7">
+        </div>
+
+        <button onclick="completeExperiment(40)">Complete Experiment</button>
+
+        <div class="info">
+            pH below 7 is acidic, pH 7 is neutral,
+            and pH above 7 is basic.
+        </div>
+    `;
+
+    const slider=document.getElementById("phSlider");
+
+    function draw(){
+
+        const ctx=canvas._ctx;
+        const w=canvas._width;
+        const h=canvas._height;
+
+        ctx.clearRect(0,0,w,h);
+
+        const p=+slider.value;
+
+        document.getElementById("phValue").textContent=p.toFixed(1);
+
+        const hue=300-(p/14)*300;
+
+        ctx.fillStyle=`hsl(${hue},80%,55%)`;
+        ctx.fillRect(30,h/2-40,w-60,80);
+
+        ctx.fillStyle="white";
+        ctx.font="bold 24px Arial";
+        ctx.textAlign="center";
+        ctx.fillText("pH "+p.toFixed(1),w/2,h/2+8);
+
+        ctx.font="13px Arial";
+        ctx.fillText(
+            p<7?"ACIDIC":p>7?"BASIC":"NEUTRAL",
+            w/2,h/2+32
+        );
+
+        ctx.textAlign="left";
+    }
+
+    slider.addEventListener("input",draw);
+
+    new ResizeObserver(draw).observe(document.getElementById("simulation"));
+
+    draw();
+}
+
+/* ============================================================
+   ATOM
+============================================================ */
+
+function atomLab(){
+
+    document.getElementById("labTitle").textContent="⚛️ Atomic Structure";
+
+    const canvas=makeCanvas();
+
+    document.getElementById("controls").innerHTML=`
+        <h3>Atom Builder</h3>
+
+        <div class="control">
+            <label>Protons <span id="protonValue">6</span></label>
+            <input id="protons" type="range" min="1" max="20" value="6">
+        </div>
+
+        <div class="control">
+            <label>Neutrons <span id="neutronValue">6</span></label>
+            <input id="neutrons" type="range" min="0" max="20" value="6">
+        </div>
+
+        <div class="control">
+            <label>Electrons <span id="electronValue">6</span></label>
+            <input id="electrons" type="range" min="1" max="20" value="6">
+        </div>
+
+        <button onclick="completeExperiment(40)">Complete Experiment</button>
+    `;
+
+    const p=document.getElementById("protons");
+    const n=document.getElementById("neutrons");
+    const e=document.getElementById("electrons");
+
+    function draw(){
+
+        const ctx=canvas._ctx;
+        const w=canvas._width;
+        const h=canvas._height;
+
+        ctx.clearRect(0,0,w,h);
+        ctx.fillStyle="#030812";
+        ctx.fillRect(0,0,w,h);
+
+        document.getElementById("protonValue").textContent=p.value;
+        document.getElementById("neutronValue").textContent=n.value;
+        document.getElementById("electronValue").textContent=e.value;
+
+        const cx=w/2;
+        const cy=h/2;
+
+        ctx.strokeStyle="#233d58";
+
+        for(let r=55;r<=150;r+=35){
+            ctx.beginPath();
+            ctx.arc(cx,cy,r,0,Math.PI*2);
+            ctx.stroke();
+        }
+
+        ctx.fillStyle="#ff566f";
+        ctx.beginPath();
+        ctx.arc(cx-10,cy,16,0,Math.PI*2);
+        ctx.fill();
+
+        ctx.fillStyle="#54dfff";
+        ctx.beginPath();
+        ctx.arc(cx+12,cy,16,0,Math.PI*2);
+        ctx.fill();
+
+        for(let i=0;i<+e.value;i++){
+
+            const shell=i%4;
+            const radius=55+shell*35;
+            const angle=(i*137)*Math.PI/180;
+
+            ctx.fillStyle="#f8e76b";
+
+            ctx.beginPath();
+            ctx.arc(
+                cx+Math.cos(angle)*radius,
+                cy+Math.sin(angle)*radius,
+                5,
+                0,
+                Math.PI*2
+            );
+            ctx.fill();
+        }
+    }
+
+    [p,n,e].forEach(x=>x.addEventListener("input",draw));
+
+    new ResizeObserver(draw).observe(document.getElementById("simulation"));
+
+    draw();
+}
+
+/* ============================================================
+   OHM'S LAW
+============================================================ */
+
+function ohmLab(){
+
+    document.getElementById("labTitle").textContent="🔌 Ohm's Law";
+
+    const canvas=makeCanvas();
+
+    document.getElementById("controls").innerHTML=`
+        <h3>Circuit</h3>
+
+        <div class="control">
+            <label>Voltage <span id="voltageValue">12 V</span></label>
+            <input id="voltage" type="range" min="1" max="24" value="12">
+        </div>
+
+        <div class="control">
+            <label>Resistance <span id="resistanceValue">6 Ω</span></label>
+            <input id="resistance" type="range" min="1" max="20" value="6">
+        </div>
+
+        <button onclick="completeExperiment(50)">Complete Experiment</button>
+
+        <div class="info">
+            Ohm's law: <b>V = IR</b><br>
+            Current can be calculated using I = V / R.
+        </div>
+    `;
+
+    const voltage=document.getElementById("voltage");
+    const resistance=document.getElementById("resistance");
+
+    function draw(){
+
+        const ctx=canvas._ctx;
+        const w=canvas._width;
+        const h=canvas._height;
+
+        ctx.clearRect(0,0,w,h);
+        ctx.fillStyle="#030812";
+        ctx.fillRect(0,0,w,h);
+
+        const V=+voltage.value;
+        const R=+resistance.value;
+        const I=V/R;
+
+        document.getElementById("voltageValue").textContent=V+" V";
+        document.getElementById("resistanceValue").textContent=R+" Ω";
+
+        const y=h/2;
+
+        ctx.strokeStyle="#7890a8";
+        ctx.lineWidth=4;
+
+        ctx.beginPath();
+        ctx.moveTo(40,y);
+        ctx.lineTo(w*.35,y);
+        ctx.lineTo(w*.45,y-60);
+        ctx.lineTo(w*.55,y-60);
+        ctx.lineTo(w*.65,y);
+        ctx.lineTo(w-40,y);
+        ctx.stroke();
+
+        ctx.fillStyle="#ffcf55";
+
+        ctx.beginPath();
+        ctx.arc(w*.5,y-60,20+I*3,0,Math.PI*2);
+        ctx.fill();
+
+        ctx.fillStyle="white";
+        ctx.font="bold 18px Arial";
+        ctx.fillText("Current: "+I.toFixed(2)+" A",20,30);
+    }
+
+    [voltage,resistance].forEach(x=>x.addEventListener("input",draw));
+
+    new ResizeObserver(draw).observe(document.getElementById("simulation"));
+
+    draw();
+}
+
+/* ============================================================
+   WAVE
+============================================================ */
+
+function waveLab(){
+
+    document.getElementById("labTitle").textContent="〰️ Wave Generator";
+
+    const canvas=makeCanvas();
+
+    document.getElementById("controls").innerHTML=`
+        <h3>Wave Controls</h3>
+
+        <div class="control">
+            <label>Frequency <span id="freqValue">3</span></label>
+            <input id="freq" type="range" min="1" max="10" value="3">
+        </div>
+
+        <div class="control">
+            <label>Amplitude <span id="ampValue">40</span></label>
+            <input id="amp" type="range" min="10" max="90" value="40">
+        </div>
+
+        <button onclick="completeExperiment(40)">Complete Experiment</button>
+
+        <div class="info">
+            Frequency controls how many cycles occur per second.
+            Amplitude represents the maximum displacement.
+        </div>
+    `;
+
+    const freq=document.getElementById("freq");
+    const amp=document.getElementById("amp");
+
+    function draw(time=0){
+
+        const ctx=canvas._ctx;
+        const w=canvas._width;
+        const h=canvas._height;
+
+        ctx.clearRect(0,0,w,h);
+
+        ctx.fillStyle="#030812";
+        ctx.fillRect(0,0,w,h);
+
+        const f=+freq.value;
+        const a=+amp.value;
+
+        document.getElementById("freqValue").textContent=f;
+        document.getElementById("ampValue").textContent=a;
+
+        ctx.strokeStyle="#243a54";
+        ctx.lineWidth=1;
+
+        ctx.beginPath();
+        ctx.moveTo(0,h/2);
+        ctx.lineTo(w,h/2);
+        ctx.stroke();
+
+        ctx.strokeStyle="#50e7ff";
+        ctx.lineWidth=3;
+
+        ctx.beginPath();
+
+        for(let x=0;x<w;x++){
+
+            const y=h/2+
+                Math.sin(x*.02*f+time*.002)*a;
+
+            if(x===0)ctx.moveTo(x,y);
+            else ctx.lineTo(x,y);
+        }
+
+        ctx.stroke();
+
+        animationId=requestAnimationFrame(draw);
+    }
+
+    [freq,amp].forEach(x=>x.addEventListener("input",()=>{
+        if(animationId){
+            cancelAnimationFrame(animationId);
+        }
+    }));
+
+    new ResizeObserver(()=>{
+        if(!animationId) draw();
+    }).observe(document.getElementById("simulation"));
+
+    draw();
+}
+
+/* ============================================================
+   CELL
+============================================================ */
+
+function cellLab(){
+
+    document.getElementById("labTitle").textContent="🔬 Cell Explorer";
+
+    const canvas=makeCanvas();
+
+    document.getElementById("controls").innerHTML=`
+        <h3>Organelles</h3>
+
+        <button onclick="cellInfo('Nucleus','Controls cell activities and contains DNA.')">Nucleus</button>
+        <button onclick="cellInfo('Mitochondria','Produces usable energy for the cell.')">Mitochondria</button>
+        <button onclick="cellInfo('Ribosome','Builds proteins.')">Ribosome</button>
+        <button onclick="cellInfo('Chloroplast','Performs photosynthesis in plant cells.')">Chloroplast</button>
+
+        <button onclick="completeExperiment(40)">Complete Experiment</button>
+
+        <div class="info" id="cellInfo">
+            Click an organelle to investigate it.
+        </div>
+    `;
+
+    function draw(){
+
+        const ctx=canvas._ctx;
+        const w=canvas._width;
+        const h=canvas._height;
+
+        ctx.clearRect(0,0,w,h);
+        ctx.fillStyle="#030812";
+        ctx.fillRect(0,0,w,h);
+
+        const cx=w/2;
+        const cy=h/2;
+
+        ctx.fillStyle="#8ce7a3";
+        ctx.beginPath();
+        ctx.ellipse(cx,cy,Math.min(w*.32,180),Math.min(h*.32,150),0,0,Math.PI*2);
+        ctx.fill();
+
+        ctx.fillStyle="#b58cff";
+        ctx.beginPath();
+        ctx.arc(cx,cy,55,0,Math.PI*2);
+        ctx.fill();
+
+        for(let i=0;i<9;i++){
+
+            const a=i*Math.PI*2/9;
+
+            ctx.fillStyle="#ffcf68";
+            ctx.beginPath();
+
+            ctx.ellipse(
+                cx+Math.cos(a)*100,
+                cy+Math.sin(a)*70,
+                18,
+                10,
+                a,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fill();
+        }
+
+        ctx.fillStyle="#fff";
+        ctx.font="bold 16px Arial";
+        ctx.fillText("PLANT CELL",20,30);
+    }
+
+    new ResizeObserver(draw).observe(document.getElementById("simulation"));
+
+    draw();
+}
+
+function cellInfo(name,text){
+    document.getElementById("cellInfo").innerHTML=
+        "<b>"+name+"</b><br>"+text;
+}
+
+/* ============================================================
+   DNA
+============================================================ */
+
+function dnaLab(){
+
+    document.getElementById("labTitle").textContent="🧬 DNA Base Pairing";
+
+    const canvas=makeCanvas();
+
+    document.getElementById("controls").innerHTML=`
+        <h3>DNA Builder</h3>
+
+        <div class="control">
+            <label>DNA sequence</label>
+            <input id="dnaSeq" value="ATCGATCG" maxlength="14"
+                style="width:100%;padding:10px;border-radius:9px;
+                border:1px solid #263c58;background:#07101c;color:white">
+        </div>
+
+        <button onclick="drawDNA()">Build DNA</button>
+        <button onclick="completeExperiment(50)">Complete Experiment</button>
+
+        <div class="info">
+            A pairs with T.<br>
+            C pairs with G.
+        </div>
+    `;
+
+    window.drawDNA=()=>{
+
+        const seq=document.getElementById("dnaSeq").value
+            .toUpperCase()
+            .replace(/[^ATCG]/g,"");
+
+        const pairs={
+            A:"T",
+            T:"A",
+            C:"G",
+            G:"C"
+        };
+
+        const ctx=canvas._ctx;
+        const w=canvas._width;
+        const h=canvas._height;
+
+        ctx.clearRect(0,0,w,h);
+
+        ctx.fillStyle="#030812";
+        ctx.fillRect(0,0,w,h);
+
+        ctx.lineWidth=3;
+
+        const start=Math.max(30,(w-seq.length*38)/2);
+
+        for(let i=0;i<seq.length;i++){
+
+            const x=start+i*38;
+
+            const y=h/2+
+                Math.sin(i*.8)*25;
+
+            const y2=h/2-
+                Math.sin(i*.8)*25;
+
+            ctx.strokeStyle="#70849d";
+
+            ctx.beginPath();
+            ctx.moveTo(x,y);
+            ctx.lineTo(x,y2);
+            ctx.stroke();
+
+            ctx.fillStyle="#53e7ff";
+
+            ctx.beginPath();
+            ctx.arc(x,y,9,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle="#ff6cda";
+
+            ctx.beginPath();
+            ctx.arc(x,y2,9,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle="white";
+            ctx.font="bold 11px Arial";
+
+            ctx.fillText(seq[i],x-4,y+4);
+            ctx.fillText(pairs[seq[i]],x-4,y2+4);
+        }
+    };
+
+    new ResizeObserver(drawDNA).observe(document.getElementById("simulation"));
+
+    drawDNA();
+}
+
+/* ============================================================
+   PHOTOSYNTHESIS
+============================================================ */
+
+function photoLab(){
+
+    document.getElementById("labTitle").textContent="🌱 Photosynthesis";
+
+    const canvas=makeCanvas();
+
+    document.getElementById("controls").innerHTML=`
+        <h3>Photosynthesis</h3>
+
+        <div class="control">
+            <label>Light intensity <span id="lightValue">50%</span></label>
+            <input id="light" type="range" min="0" max="100" value="50">
+        </div>
+
+        <div class="control">
+            <label>CO₂ <span id="co2Value">50%</span></label>
+            <input id="co2" type="range" min="0" max="100" value="50">
+        </div>
+
+        <button onclick="completeExperiment(45)">Complete Experiment</button>
+
+        <div class="info">
+            Plants use light energy, carbon dioxide and water
+            to produce glucose and oxygen.
+        </div>
+    `;
+
+    const light=document.getElementById("light");
+    const co2=document.getElementById("co2");
+
+    function draw(){
+
+        const ctx=canvas._ctx;
+        const w=canvas._width;
+        const h=canvas._height;
+
+        ctx.clearRect(0,0,w,h);
+        ctx.fillStyle="#030812";
+        ctx.fillRect(0,0,w,h);
+
+        const L=+light.value;
+        const C=+co2.value;
+
+        document.getElementById("lightValue").textContent=L+"%";
+        document.getElementById("co2Value").textContent=C+"%";
+
+        const rate=Math.min(L,C);
+
+        ctx.fillStyle="#ffd84c";
+
+        ctx.beginPath();
+        ctx.arc(w*.2,h*.25,35+L*.15,0,Math.PI*2);
+        ctx.fill();
+
+        ctx.strokeStyle="#50d978";
+        ctx.lineWidth=8;
+
+        ctx.beginPath();
+        ctx.moveTo(w/2,h-30);
+        ctx.lineTo(w/2,h*.55);
+        ctx.stroke();
+
+        for(let i=0;i<5;i++){
+
+            ctx.beginPath();
+
+            ctx.ellipse(
+                w/2-55+i*28,
+                h*.55-i*12,
+                28,
+                12,
+                i*.3,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fillStyle="#47d97d";
+            ctx.fill();
+        }
+
+        ctx.fillStyle="white";
+        ctx.font="bold 18px Arial";
+        ctx.fillText(
+            "Relative photosynthesis: "+Math.round(rate)+"%",
+            20,30
+        );
+    }
+
+    [light,co2].forEach(x=>x.addEventListener("input",draw));
+
+    new ResizeObserver(draw).observe(document.getElementById("simulation"));
+
+    draw();
+}
+
+/* ============================================================
+   RESET
+============================================================ */
+
+function resetData(){
+
+    if(confirm("Reset all laboratory progress?")){
+
+        data={...DEFAULT_DATA};
+
+        save();
+
+        alert("Laboratory progress reset.");
+    }
+}
+
+/* ============================================================
+   ACHIEVEMENTS
+============================================================ */
+
+function updateAchievements(){
+
+    document.getElementById("a1").classList.toggle(
+        "locked",
+        data.completed<1
+    );
+
+    document.getElementById("a5").classList.toggle(
+        "locked",
+        data.completed<5
+    );
+
+    document.getElementById("a10").classList.toggle(
+        "locked",
+        data.completed<10
+    );
+
+    document.getElementById("a25").classList.toggle(
+        "locked",
+        data.completed<25
+    );
+}
+
+/* ============================================================
+   LOADING
+============================================================ */
+
+let progress=0;
+
+const loadingMessages=[
+    "Initializing laboratory...",
+    "Calibrating physics engine...",
+    "Loading chemistry...",
+    "Initializing biology...",
+    "Preparing experiments...",
+    "Science Lab ready."
+];
+
+const loaderFill=document.getElementById("loaderFill");
+const loadingText=document.getElementById("loadingText");
+
+const loadTimer=setInterval(()=>{
+
+    progress+=20;
+
+    loaderFill.style.width=progress+"%";
+
+    loadingText.textContent=
+        loadingMessages[Math.min(
+            Math.floor(progress/20),
+            loadingMessages.length-1
+        )];
+
+    if(progress>=100){
+
+        clearInterval(loadTimer);
+
+        setTimeout(()=>{
+            document.getElementById("loading").classList.add("hide");
+        },500);
+    }
+
+},300);
+
+/* ============================================================
+   INIT
+============================================================ */
+
+updateUI();
+
+setInterval(updateUI,1000);
+
+document.getElementById("labModal").addEventListener("click",e=>{
+    if(e.target.id==="labModal"){
+        closeLab();
+    }
+});
+
+window.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){
+        closeLab();
+    }
+});
+</script>
+
+</body>
+</html>
